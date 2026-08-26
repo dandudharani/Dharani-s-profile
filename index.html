@@ -1,182 +1,526 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Profile</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Student Personal Portfolio Website">
+  <title>Student Portfolio</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f5f8;
-            margin: 0;
-            color: #333;
-        }
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
 
-        .profile {
-            background-color: #1e3a5f;
-            color: white;
-            text-align: center;
-            padding: 40px 20px;
-        }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
 
-        .profile-img {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            border: 5px solid white;
-            object-fit: cover;
-        }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
 
-        .profile h1 {
-            margin: 15px 0 5px;
-        }
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #111827;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 7%;
+    }
 
-        .profile p {
-            max-width: 600px;
-            margin: auto;
-            line-height: 1.6;
-        }
+    .logo {
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
 
-        .container {
-            background: white;
-            max-width: 900px;
-            margin: 25px auto;
-            padding: 25px;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-        }
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      list-style: none;
+    }
 
-        h2 {
-            color: #1e3a5f;
-            border-bottom: 2px solid #1e3a5f;
-            padding-bottom: 8px;
-        }
+    .nav-links a:hover {
+      color: #60a5fa;
+    }
 
-        .skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
+    section {
+      padding: 75px 7%;
+    }
 
-        .skill {
-            background-color: #1e3a5f;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 20px;
-        }
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      background: linear-gradient(135deg, #eef5ff, #ffffff);
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+    .hero-text {
+      max-width: 650px;
+    }
 
-        th, td {
-            border: 1px solid #aaa;
-            padding: 12px;
-            text-align: center;
-        }
+    .hero h1 {
+      font-size: clamp(2.3rem, 6vw, 4.5rem);
+      color: #111827;
+      margin-bottom: 10px;
+    }
 
-        th {
-            background-color: #1e3a5f;
-            color: white;
-        }
+    .hero h1 span {
+      color: #2563eb;
+    }
 
-        a {
-            color: #1e3a5f;
-            text-decoration: none;
-        }
+    .hero h2 {
+      color: #4b5563;
+      margin-bottom: 18px;
+    }
 
-        footer {
-            background-color: #1e3a5f;
-            color: white;
-            text-align: center;
-            padding: 15px;
-        }
-    </style>
+    .hero p {
+      color: #6b7280;
+      font-size: 1.05rem;
+      margin-bottom: 25px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      padding: 12px 22px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    .btn:hover {
+      background: #1d4ed8;
+      transform: translateY(-2px);
+    }
+
+    .btn.secondary {
+      background: #111827;
+    }
+
+    .hero-card {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: #dbeafe;
+      display: grid;
+      place-items: center;
+      border: 8px solid white;
+      box-shadow: 0 15px 40px rgba(0,0,0,.12);
+      font-size: 5rem;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-title h2 {
+      font-size: 2rem;
+      color: #111827;
+    }
+
+    .section-title p {
+      color: #6b7280;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 7px 25px rgba(0,0,0,.07);
+    }
+
+    .card h3 {
+      color: #2563eb;
+      margin-bottom: 12px;
+    }
+
+    .objective {
+      margin-top: 18px;
+      padding: 18px;
+      background: #eff6ff;
+      border-left: 4px solid #2563eb;
+      border-radius: 6px;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .skill {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 5px 18px rgba(0,0,0,.06);
+      font-weight: bold;
+    }
+
+    .skill span {
+      display: block;
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 25px;
+    }
+
+    .project {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project .tag {
+      display: inline-block;
+      margin: 6px 5px 0 0;
+      padding: 5px 9px;
+      background: #e0ecff;
+      color: #1d4ed8;
+      border-radius: 20px;
+      font-size: .8rem;
+    }
+
+    .project-link {
+      display: inline-block;
+      margin-top: 16px;
+      color: #2563eb;
+      font-weight: bold;
+    }
+
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .contact {
+      background: #111827;
+      color: white;
+    }
+
+    .contact .section-title h2,
+    .contact .section-title p {
+      color: white;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .contact-card {
+      background: #1f2937;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .contact-card h3 {
+      color: #93c5fd;
+      margin-bottom: 8px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #030712;
+      color: #d1d5db;
+    }
+
+    #message {
+      margin-top: 18px;
+      padding: 12px;
+      display: none;
+      background: #dcfce7;
+      color: #166534;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 800px) {
+      .hero {
+        flex-direction: column-reverse;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .about-grid,
+      .projects-grid,
+      .cert-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      nav {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .nav-links {
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 450px) {
+      section {
+        padding: 55px 5%;
+      }
+
+      .hero-card {
+        width: 210px;
+        height: 210px;
+        font-size: 3.5rem;
+      }
+
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        font-size: .85rem;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-    <header class="profile">
-        <img src="profile.jpg" alt="Profile Image" class="profile-img">
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">My Portfolio</div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#certifications">Certifications</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
 
-        <h1>Your Name</h1>
-        <h3>Student | Aspiring Web Developer</h3>
+  <!-- Home / Professional Headline -->
+  <section class="hero" id="home">
+    <div class="hero-text">
+      <h1>Hello, I'm <span>D Reddy Dharani</span></h1>
+      <h2>Computer Science and Engineering Student | 3rd Year</h2>
+      <p>
+        Welcome to my personal portfolio. I am a B.Tech student interested in
+        Full Stack Development, problem solving and building useful web applications.
+      </p>
+      <a class="btn" href="#projects">View My Projects</a>
+      <button class="btn secondary" onclick="showMessage()">Say Hello</button>
+      <div id="message">Thank you for visiting my portfolio! 👋</div>
+    </div>
 
+    <div class="hero-card" aria-label="Profile placeholder">👩‍💻</div>
+  </section>
+
+  <!-- About Me -->
+  <section id="about">
+    <div class="section-title">
+      <h2>About Me</h2>
+      <p>A short introduction about my education and career goals.</p>
+    </div>
+
+    <div class="about-grid">
+      <div class="card">
+        <h3>Short Biography</h3>
         <p>
-            I am a passionate student interested in web development,
-            programming and learning new technologies.
+          I am a B.Tech student who enjoys learning new technologies and
+          creating practical projects. I am currently improving my skills in
+          HTML, CSS, JavaScript and Full Stack Development.
         </p>
-    </header>
+      </div>
 
-    <section class="container">
-        <h2>About Me</h2>
+      <div class="card">
+        <h3>Educational Qualification</h3>
+        <p><strong>Degree:</strong> B.Tech</p>
+        <p><strong>Branch:</strong> Computer Science / IT</p>
+        <p><strong>College:</strong> Audisankara College</p>
+        <p><strong>Year:</strong> 2026</p>
+      </div>
+    </div>
 
+    <div class="objective">
+      <strong>Career Objective:</strong>
+      To become a skilled software developer and build user-friendly,
+      reliable and innovative software applications.
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills">
+    <div class="section-title">
+      <h2>Technical Skills</h2>
+      <p>Technologies and tools I am learning.</p>
+    </div>
+
+    <div class="skills-grid">
+      <div class="skill"><span>🌐</span>HTML</div>
+      <div class="skill"><span>🎨</span>CSS</div>
+      <div class="skill"><span>⚡</span>JavaScript</div>
+      <div class="skill"><span>🐍</span>Python</div>
+      <div class="skill"><span>☕</span>Java</div>
+      <div class="skill"><span>🗄️</span>MySQL</div>
+      <div class="skill"><span>🔧</span>Git & GitHub</div>
+      <div class="skill"><span>🚀</span>Full Stack</div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects">
+    <div class="section-title">
+      <h2>My Projects</h2>
+      <p>At least two projects are included as required.</p>
+    </div>
+
+    <div class="projects-grid">
+
+      <div class="card project">
+        <h3>1. Personal Portfolio Website</h3>
         <p>
-            I am a hardworking and enthusiastic student who enjoys
-            learning technology and developing creative websites.
+          A responsive portfolio website created to showcase my profile,
+          technical skills, projects, certifications and contact details.
         </p>
-
-        <h3>Career / Learning Objective</h3>
-
-        <p>
-            My objective is to become a skilled software developer
-            and continuously learn new technologies.
-        </p>
-    </section>
-
-    <section class="container">
-        <h2>Skills</h2>
-
-        <div class="skills">
-            <div class="skill">HTML</div>
-            <div class="skill">CSS</div>
-            <div class="skill">JavaScript</div>
-            <div class="skill">SQL</div>
-            <div class="skill">Git</div>
+        <div>
+          <span class="tag">HTML</span>
+          <span class="tag">CSS</span>
+          <span class="tag">JavaScript</span>
         </div>
-    </section>
+        <a class="project-link" href="https://github.com/" target="_blank">
+          GitHub / Project Link →
+        </a>
+      </div>
 
-    <section class="container">
-        <h2>Education</h2>
+      <div class="card project">
+        <h3>2. Student Canteen Ordering System</h3>
+        <p>
+          A web application that allows students to view food items,
+          enter their details and place canteen orders through a simple interface.
+        </p>
+        <div>
+          <span class="tag">HTML</span>
+          <span class="tag">CSS</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">MySQL</span>
+        </div>
+        <a class="project-link" href="https://github.com/" target="_blank">
+          GitHub / Project Link →
+        </a>
+      </div>
 
-        <table>
-            <tr>
-                <th>Degree</th>
-                <th>College/University</th>
-                <th>Year</th>
-                <th>CGPA/Percentage</th>
-            </tr>
+    </div>
+  </section>
 
-            <tr>
-                <td>Bachelor's Degree</td>
-                <td>Your College</td>
-                <td>2026</td>
-                <td>85%</td>
-            </tr>
+  <!-- Certifications -->
+  <section id="certifications">
+    <div class="section-title">
+      <h2>Certifications</h2>
+      <p>Add your completed certifications here.</p>
+    </div>
 
-            <tr>
-                <td>Intermediate</td>
-                <td>Your College</td>
-                <td>2023</td>
-                <td>90%</td>
-            </tr>
-        </table>
-    </section>
+    <div class="cert-grid">
+      <div class="card">
+        <h3>Web Development Certificate</h3>
+        <p><strong>Issuing Platform:</strong> Your Platform Name</p>
+        <p><strong>Status:</strong> Completed</p>
+      </div>
 
-    <section class="container">
-        <h2>Contact</h2>
+      <div class="card">
+        <h3>Programming / Python Certificate</h3>
+        <p><strong>Issuing Organization:</strong> Your Organization</p>
+        <p><strong>Status:</strong> Completed</p>
+      </div>
+    </div>
+  </section>
 
-        <p><b>Email:</b> yourname@gmail.com</p>
-        <p><b>Phone:</b> +91 9876543210</p>
-        <p><b>LinkedIn:</b> <a href="#">linkedin.com/in/yourname</a></p>
-        <p><b>GitHub:</b> <a href="#">github.com/yourname</a></p>
-    </section>
+  <!-- Contact -->
+  <section class="contact" id="contact">
+    <div class="section-title">
+      <h2>Contact Me</h2>
+      <p>Let's connect and learn together.</p>
+    </div>
 
-    <footer>
-        © 2026 Your Name | Personal Profile
-    </footer>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <h3>📧 Email</h3>
+        <p>yourname@gmail.com</p>
+      </div>
+
+      <div class="contact-card">
+        <h3>💼 LinkedIn</h3>
+        <p>
+          <a href="https://www.linkedin.com/" target="_blank">
+            LinkedIn Profile
+          </a>
+        </p>
+      </div>
+
+      <div class="contact-card">
+        <h3>🐙 GitHub</h3>
+        <p>
+          <a href="https://github.com/" target="_blank">
+            GitHub Profile
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© <span id="year"></span> D Reddy Dharani | Student Portfolio</p>
+  </footer>
+
+  <script>
+    // JavaScript requirement: button click interaction
+    function showMessage() {
+      const message = document.getElementById("message");
+      message.style.display = "block";
+
+      setTimeout(() => {
+        message.style.display = "none";
+      }, 3000);
+    }
+
+    // Automatically display the current year
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 
 </body>
 </html>
