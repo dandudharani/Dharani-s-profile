@@ -1,526 +1,472 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Student Personal Portfolio Website">
-  <title>Student Portfolio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A simple and modern Student Task Tracker">
+    <title>Student Task Tracker</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      line-height: 1.6;
-      background: #f5f7fb;
-      color: #1f2937;
-    }
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #eef2ff, #f8fafc, #e0f2fe);
+            color: #1e293b;
+            padding: 30px 15px;
+        }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+        .container {
+            width: 100%;
+            max-width: 850px;
+            margin: auto;
+        }
 
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: #111827;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 7%;
-    }
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 38px 30px;
+            border-radius: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+            box-shadow: 0 15px 35px rgba(79, 70, 229, 0.22);
+        }
 
-    .logo {
-      font-size: 1.4rem;
-      font-weight: bold;
-    }
+        .header h1 {
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
 
-    .nav-links {
-      display: flex;
-      gap: 22px;
-      list-style: none;
-    }
+        .header p {
+            font-size: 16px;
+            opacity: 0.92;
+        }
 
-    .nav-links a:hover {
-      color: #60a5fa;
-    }
+        /* Cards */
+        .add-task-section,
+        .task-section,
+        .counter-section {
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 26px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.07);
+        }
 
-    section {
-      padding: 75px 7%;
-    }
+        h2 {
+            font-size: 21px;
+            margin-bottom: 18px;
+            color: #1e293b;
+        }
 
-    .hero {
-      min-height: 90vh;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 40px;
-      background: linear-gradient(135deg, #eef5ff, #ffffff);
-    }
+        /* Input */
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 9px;
+        }
 
-    .hero-text {
-      max-width: 650px;
-    }
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
 
-    .hero h1 {
-      font-size: clamp(2.3rem, 6vw, 4.5rem);
-      color: #111827;
-      margin-bottom: 10px;
-    }
+        #taskInput {
+            flex: 1;
+            min-width: 0;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.25s;
+        }
 
-    .hero h1 span {
-      color: #2563eb;
-    }
+        #taskInput:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+        }
 
-    .hero h2 {
-      color: #4b5563;
-      margin-bottom: 18px;
-    }
+        button {
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, opacity 0.2s;
+        }
 
-    .hero p {
-      color: #6b7280;
-      font-size: 1.05rem;
-      margin-bottom: 25px;
-    }
+        button:hover {
+            transform: translateY(-1px);
+            opacity: 0.92;
+        }
 
-    .btn {
-      display: inline-block;
-      background: #2563eb;
-      color: white;
-      padding: 12px 22px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      margin-right: 8px;
-    }
+        #addTaskBtn {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 0 22px;
+            border-radius: 12px;
+            font-size: 15px;
+        }
 
-    .btn:hover {
-      background: #1d4ed8;
-      transform: translateY(-2px);
-    }
+        .error-message {
+            display: block;
+            color: #dc2626;
+            font-size: 13px;
+            margin-top: 8px;
+            min-height: 16px;
+        }
 
-    .btn.secondary {
-      background: #111827;
-    }
+        /* Task list */
+        .task-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
 
-    .hero-card {
-      width: 280px;
-      height: 280px;
-      border-radius: 50%;
-      background: #dbeafe;
-      display: grid;
-      place-items: center;
-      border: 8px solid white;
-      box-shadow: 0 15px 40px rgba(0,0,0,.12);
-      font-size: 5rem;
-    }
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            transition: 0.25s;
+        }
 
-    .section-title {
-      text-align: center;
-      margin-bottom: 40px;
-    }
+        .task-item:hover {
+            border-color: #c7d2fe;
+            box-shadow: 0 5px 15px rgba(15, 23, 42, 0.06);
+        }
 
-    .section-title h2 {
-      font-size: 2rem;
-      color: #111827;
-    }
+        .task-check {
+            width: 21px;
+            height: 21px;
+            accent-color: #4f46e5;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
 
-    .section-title p {
-      color: #6b7280;
-    }
+        .task-name {
+            flex: 1;
+            font-size: 15px;
+            overflow-wrap: anywhere;
+        }
 
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 25px;
-    }
+        .task-item.completed {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
 
-    .card {
-      background: white;
-      padding: 25px;
-      border-radius: 14px;
-      box-shadow: 0 7px 25px rgba(0,0,0,.07);
-    }
+        .task-item.completed .task-name {
+            text-decoration: line-through;
+            color: #64748b;
+        }
 
-    .card h3 {
-      color: #2563eb;
-      margin-bottom: 12px;
-    }
+        .complete-btn,
+        .delete-btn {
+            padding: 9px 13px;
+            border-radius: 9px;
+            font-size: 13px;
+        }
 
-    .objective {
-      margin-top: 18px;
-      padding: 18px;
-      background: #eff6ff;
-      border-left: 4px solid #2563eb;
-      border-radius: 6px;
-    }
+        .complete-btn {
+            background: #dcfce7;
+            color: #15803d;
+        }
 
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-    }
+        .delete-btn {
+            background: #fee2e2;
+            color: #dc2626;
+        }
 
-    .skill {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 5px 18px rgba(0,0,0,.06);
-      font-weight: bold;
-    }
+        .empty-message {
+            text-align: center;
+            color: #64748b;
+            padding: 20px 5px 5px;
+            font-size: 14px;
+        }
 
-    .skill span {
-      display: block;
-      font-size: 2rem;
-      margin-bottom: 8px;
-    }
+        /* Counters */
+        .counter {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
 
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 25px;
-    }
+        .counter-item {
+            padding: 20px 12px;
+            border-radius: 15px;
+            background: #f8fafc;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
 
-    .project {
-      position: relative;
-      overflow: hidden;
-    }
+        .counter-label {
+            display: block;
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
 
-    .project .tag {
-      display: inline-block;
-      margin: 6px 5px 0 0;
-      padding: 5px 9px;
-      background: #e0ecff;
-      color: #1d4ed8;
-      border-radius: 20px;
-      font-size: .8rem;
-    }
+        .counter-item strong {
+            font-size: 26px;
+            color: #4f46e5;
+        }
 
-    .project-link {
-      display: inline-block;
-      margin-top: 16px;
-      color: #2563eb;
-      font-weight: bold;
-    }
+        footer {
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+            padding: 8px;
+        }
 
-    .cert-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-    }
+        /* Mobile */
+        @media (max-width: 600px) {
+            body {
+                padding: 18px 10px;
+            }
 
-    .contact {
-      background: #111827;
-      color: white;
-    }
+            .header {
+                padding: 30px 18px;
+                border-radius: 18px;
+            }
 
-    .contact .section-title h2,
-    .contact .section-title p {
-      color: white;
-    }
+            .header h1 {
+                font-size: 27px;
+            }
 
-    .contact-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
+            .add-task-section,
+            .task-section,
+            .counter-section {
+                padding: 20px 16px;
+                border-radius: 16px;
+            }
 
-    .contact-card {
-      background: #1f2937;
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-    }
+            .input-group {
+                flex-direction: column;
+            }
 
-    .contact-card h3 {
-      color: #93c5fd;
-      margin-bottom: 8px;
-    }
+            #addTaskBtn {
+                padding: 13px;
+            }
 
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: #030712;
-      color: #d1d5db;
-    }
+            .task-item {
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
 
-    #message {
-      margin-top: 18px;
-      padding: 12px;
-      display: none;
-      background: #dcfce7;
-      color: #166534;
-      border-radius: 8px;
-      font-weight: bold;
-    }
+            .task-name {
+                width: calc(100% - 40px);
+                flex: none;
+            }
 
-    @media (max-width: 800px) {
-      .hero {
-        flex-direction: column-reverse;
-        text-align: center;
-        justify-content: center;
-      }
+            .complete-btn,
+            .delete-btn {
+                flex: 1;
+            }
 
-      .about-grid,
-      .projects-grid,
-      .cert-grid {
-        grid-template-columns: 1fr;
-      }
+            .counter {
+                gap: 8px;
+            }
 
-      .skills-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+            .counter-item {
+                padding: 15px 5px;
+            }
 
-      .contact-grid {
-        grid-template-columns: 1fr;
-      }
-
-      nav {
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .nav-links {
-        gap: 12px;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-    }
-
-    @media (max-width: 450px) {
-      section {
-        padding: 55px 5%;
-      }
-
-      .hero-card {
-        width: 210px;
-        height: 210px;
-        font-size: 3.5rem;
-      }
-
-      .skills-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .nav-links {
-        font-size: .85rem;
-      }
-    }
-  </style>
+            .counter-item strong {
+                font-size: 22px;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <main class="container">
 
-  <!-- Navigation -->
-  <nav>
-    <div class="logo">My Portfolio</div>
-    <ul class="nav-links">
-      <li><a href="#home">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#certifications">Certifications</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
+        <header class="header">
+            <h1>📚 Student Task Tracker</h1>
+            <p>Organize your daily learning tasks and stay productive.</p>
+        </header>
 
-  <!-- Home / Professional Headline -->
-  <section class="hero" id="home">
-    <div class="hero-text">
-      <h1>Hello, I'm <span>D Reddy Dharani</span></h1>
-      <h2>Computer Science and Engineering Student | 3rd Year</h2>
-      <p>
-        Welcome to my personal portfolio. I am a B.Tech student interested in
-        Full Stack Development, problem solving and building useful web applications.
-      </p>
-      <a class="btn" href="#projects">View My Projects</a>
-      <button class="btn secondary" onclick="showMessage()">Say Hello</button>
-      <div id="message">Thank you for visiting my portfolio! 👋</div>
-    </div>
+        <section class="add-task-section">
+            <h2>➕ Add Task</h2>
 
-    <div class="hero-card" aria-label="Profile placeholder">👩‍💻</div>
-  </section>
+            <form id="taskForm">
+                <label for="taskInput">Enter your task:</label>
 
-  <!-- About Me -->
-  <section id="about">
-    <div class="section-title">
-      <h2>About Me</h2>
-      <p>A short introduction about my education and career goals.</p>
-    </div>
+                <div class="input-group">
+                    <input
+                        type="text"
+                        id="taskInput"
+                        placeholder="e.g. Complete JavaScript Assignment"
+                        autocomplete="off"
+                    >
+                    <button type="submit" id="addTaskBtn">Add Task</button>
+                </div>
 
-    <div class="about-grid">
-      <div class="card">
-        <h3>Short Biography</h3>
-        <p>
-          I am a B.Tech student who enjoys learning new technologies and
-          creating practical projects. I am currently improving my skills in
-          HTML, CSS, JavaScript and Full Stack Development.
-        </p>
-      </div>
+                <span id="errorMessage" class="error-message"></span>
+            </form>
+        </section>
 
-      <div class="card">
-        <h3>Educational Qualification</h3>
-        <p><strong>Degree:</strong> B.Tech</p>
-        <p><strong>Branch:</strong> Computer Science / IT</p>
-        <p><strong>College:</strong> Audisankara College</p>
-        <p><strong>Year:</strong> 2026</p>
-      </div>
-    </div>
+        <section class="task-section">
+            <h2>📝 Task List</h2>
 
-    <div class="objective">
-      <strong>Career Objective:</strong>
-      To become a skilled software developer and build user-friendly,
-      reliable and innovative software applications.
-    </div>
-  </section>
+            <ul id="taskList" class="task-list"></ul>
 
-  <!-- Skills -->
-  <section id="skills">
-    <div class="section-title">
-      <h2>Technical Skills</h2>
-      <p>Technologies and tools I am learning.</p>
-    </div>
+            <p id="emptyMessage" class="empty-message">
+                No tasks yet. Add your first task!
+            </p>
+        </section>
 
-    <div class="skills-grid">
-      <div class="skill"><span>🌐</span>HTML</div>
-      <div class="skill"><span>🎨</span>CSS</div>
-      <div class="skill"><span>⚡</span>JavaScript</div>
-      <div class="skill"><span>🐍</span>Python</div>
-      <div class="skill"><span>☕</span>Java</div>
-      <div class="skill"><span>🗄️</span>MySQL</div>
-      <div class="skill"><span>🔧</span>Git & GitHub</div>
-      <div class="skill"><span>🚀</span>Full Stack</div>
-    </div>
-  </section>
+        <section class="counter-section">
+            <h2>📊 Task Summary</h2>
 
-  <!-- Projects -->
-  <section id="projects">
-    <div class="section-title">
-      <h2>My Projects</h2>
-      <p>At least two projects are included as required.</p>
-    </div>
+            <div class="counter">
+                <div class="counter-item">
+                    <span class="counter-label">Total Tasks</span>
+                    <strong id="totalTasks">0</strong>
+                </div>
 
-    <div class="projects-grid">
+                <div class="counter-item">
+                    <span class="counter-label">Completed</span>
+                    <strong id="completedTasks">0</strong>
+                </div>
 
-      <div class="card project">
-        <h3>1. Personal Portfolio Website</h3>
-        <p>
-          A responsive portfolio website created to showcase my profile,
-          technical skills, projects, certifications and contact details.
-        </p>
-        <div>
-          <span class="tag">HTML</span>
-          <span class="tag">CSS</span>
-          <span class="tag">JavaScript</span>
-        </div>
-        <a class="project-link" href="https://github.com/" target="_blank">
-          GitHub / Project Link →
-        </a>
-      </div>
+                <div class="counter-item">
+                    <span class="counter-label">Pending</span>
+                    <strong id="pendingTasks">0</strong>
+                </div>
+            </div>
+        </section>
 
-      <div class="card project">
-        <h3>2. Student Canteen Ordering System</h3>
-        <p>
-          A web application that allows students to view food items,
-          enter their details and place canteen orders through a simple interface.
-        </p>
-        <div>
-          <span class="tag">HTML</span>
-          <span class="tag">CSS</span>
-          <span class="tag">JavaScript</span>
-          <span class="tag">MySQL</span>
-        </div>
-        <a class="project-link" href="https://github.com/" target="_blank">
-          GitHub / Project Link →
-        </a>
-      </div>
+        <footer>
+            <p>Student Task Tracker • HTML, CSS & JavaScript</p>
+        </footer>
+    </main>
 
-    </div>
-  </section>
+    <script>
+        const taskForm = document.getElementById("taskForm");
+        const taskInput = document.getElementById("taskInput");
+        const taskList = document.getElementById("taskList");
+        const emptyMessage = document.getElementById("emptyMessage");
+        const errorMessage = document.getElementById("errorMessage");
 
-  <!-- Certifications -->
-  <section id="certifications">
-    <div class="section-title">
-      <h2>Certifications</h2>
-      <p>Add your completed certifications here.</p>
-    </div>
+        const totalTasks = document.getElementById("totalTasks");
+        const completedTasks = document.getElementById("completedTasks");
+        const pendingTasks = document.getElementById("pendingTasks");
 
-    <div class="cert-grid">
-      <div class="card">
-        <h3>Web Development Certificate</h3>
-        <p><strong>Issuing Platform:</strong> Your Platform Name</p>
-        <p><strong>Status:</strong> Completed</p>
-      </div>
+        let tasks = [];
 
-      <div class="card">
-        <h3>Programming / Python Certificate</h3>
-        <p><strong>Issuing Organization:</strong> Your Organization</p>
-        <p><strong>Status:</strong> Completed</p>
-      </div>
-    </div>
-  </section>
+        taskForm.addEventListener("submit", function(event) {
+            event.preventDefault();
 
-  <!-- Contact -->
-  <section class="contact" id="contact">
-    <div class="section-title">
-      <h2>Contact Me</h2>
-      <p>Let's connect and learn together.</p>
-    </div>
+            const taskText = taskInput.value.trim();
 
-    <div class="contact-grid">
-      <div class="contact-card">
-        <h3>📧 Email</h3>
-        <p>yourname@gmail.com</p>
-      </div>
+            if (taskText === "") {
+                errorMessage.textContent = "Please enter a task.";
+                taskInput.focus();
+                return;
+            }
 
-      <div class="contact-card">
-        <h3>💼 LinkedIn</h3>
-        <p>
-          <a href="https://www.linkedin.com/" target="_blank">
-            LinkedIn Profile
-          </a>
-        </p>
-      </div>
+            errorMessage.textContent = "";
 
-      <div class="contact-card">
-        <h3>🐙 GitHub</h3>
-        <p>
-          <a href="https://github.com/" target="_blank">
-            GitHub Profile
-          </a>
-        </p>
-      </div>
-    </div>
-  </section>
+            tasks.push({
+                id: Date.now(),
+                name: taskText,
+                completed: false
+            });
 
-  <footer>
-    <p>© <span id="year"></span> D Reddy Dharani | Student Portfolio</p>
-  </footer>
+            taskInput.value = "";
+            taskInput.focus();
 
-  <script>
-    // JavaScript requirement: button click interaction
-    function showMessage() {
-      const message = document.getElementById("message");
-      message.style.display = "block";
+            renderTasks();
+        });
 
-      setTimeout(() => {
-        message.style.display = "none";
-      }, 3000);
-    }
+        function renderTasks() {
+            taskList.innerHTML = "";
 
-    // Automatically display the current year
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
+            if (tasks.length === 0) {
+                emptyMessage.style.display = "block";
+            } else {
+                emptyMessage.style.display = "none";
+            }
 
+            tasks.forEach(function(task) {
+                const li = document.createElement("li");
+                li.className = "task-item";
+
+                if (task.completed) {
+                    li.classList.add("completed");
+                }
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.className = "task-check";
+                checkbox.checked = task.completed;
+
+                checkbox.addEventListener("change", function() {
+                    task.completed = checkbox.checked;
+                    renderTasks();
+                });
+
+                const taskName = document.createElement("span");
+                taskName.className = "task-name";
+                taskName.textContent = task.name;
+
+                const completeButton = document.createElement("button");
+                completeButton.className = "complete-btn";
+                completeButton.textContent = task.completed ? "Undo" : "Complete";
+
+                completeButton.addEventListener("click", function() {
+                    task.completed = !task.completed;
+                    renderTasks();
+                });
+
+                const deleteButton = document.createElement("button");
+                deleteButton.className = "delete-btn";
+                deleteButton.textContent = "Delete";
+
+                deleteButton.addEventListener("click", function() {
+                    tasks = tasks.filter(function(item) {
+                        return item.id !== task.id;
+                    });
+
+                    renderTasks();
+                });
+
+                li.appendChild(checkbox);
+                li.appendChild(taskName);
+                li.appendChild(completeButton);
+                li.appendChild(deleteButton);
+
+                taskList.appendChild(li);
+            });
+
+            updateCounters();
+        }
+
+        function updateCounters() {
+            const total = tasks.length;
+            const completed = tasks.filter(function(task) {
+                return task.completed;
+            }).length;
+
+            const pending = total - completed;
+
+            totalTasks.textContent = total;
+            completedTasks.textContent = completed;
+            pendingTasks.textContent = pending;
+        }
+
+        renderTasks();
+    </script>
 </body>
 </html>
