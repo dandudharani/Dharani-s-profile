@@ -1,472 +1,413 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A simple and modern Student Task Tracker">
-    <title>Student Task Tracker</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #eef2ff, #f8fafc, #e0f2fe);
-            color: #1e293b;
-            padding: 30px 15px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 850px;
-            margin: auto;
-        }
-
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: white;
-            padding: 38px 30px;
-            border-radius: 24px;
-            text-align: center;
-            margin-bottom: 24px;
-            box-shadow: 0 15px 35px rgba(79, 70, 229, 0.22);
-        }
-
-        .header h1 {
-            font-size: 34px;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 16px;
-            opacity: 0.92;
-        }
-
-        /* Cards */
-        .add-task-section,
-        .task-section,
-        .counter-section {
-            background: rgba(255, 255, 255, 0.94);
-            border: 1px solid #e2e8f0;
-            border-radius: 20px;
-            padding: 26px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.07);
-        }
-
-        h2 {
-            font-size: 21px;
-            margin-bottom: 18px;
-            color: #1e293b;
-        }
-
-        /* Input */
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 9px;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        #taskInput {
-            flex: 1;
-            min-width: 0;
-            padding: 14px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 15px;
-            outline: none;
-            transition: 0.25s;
-        }
-
-        #taskInput:focus {
-            border-color: #6366f1;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
-        }
-
-        button {
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: transform 0.2s, opacity 0.2s;
-        }
-
-        button:hover {
-            transform: translateY(-1px);
-            opacity: 0.92;
-        }
-
-        #addTaskBtn {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: white;
-            padding: 0 22px;
-            border-radius: 12px;
-            font-size: 15px;
-        }
-
-        .error-message {
-            display: block;
-            color: #dc2626;
-            font-size: 13px;
-            margin-top: 8px;
-            min-height: 16px;
-        }
-
-        /* Task list */
-        .task-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .task-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 15px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            transition: 0.25s;
-        }
-
-        .task-item:hover {
-            border-color: #c7d2fe;
-            box-shadow: 0 5px 15px rgba(15, 23, 42, 0.06);
-        }
-
-        .task-check {
-            width: 21px;
-            height: 21px;
-            accent-color: #4f46e5;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .task-name {
-            flex: 1;
-            font-size: 15px;
-            overflow-wrap: anywhere;
-        }
-
-        .task-item.completed {
-            background: #f0fdf4;
-            border-color: #bbf7d0;
-        }
-
-        .task-item.completed .task-name {
-            text-decoration: line-through;
-            color: #64748b;
-        }
-
-        .complete-btn,
-        .delete-btn {
-            padding: 9px 13px;
-            border-radius: 9px;
-            font-size: 13px;
-        }
-
-        .complete-btn {
-            background: #dcfce7;
-            color: #15803d;
-        }
-
-        .delete-btn {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        .empty-message {
-            text-align: center;
-            color: #64748b;
-            padding: 20px 5px 5px;
-            font-size: 14px;
-        }
-
-        /* Counters */
-        .counter {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-        }
-
-        .counter-item {
-            padding: 20px 12px;
-            border-radius: 15px;
-            background: #f8fafc;
-            text-align: center;
-            border: 1px solid #e2e8f0;
-        }
-
-        .counter-label {
-            display: block;
-            color: #64748b;
-            font-size: 13px;
-            margin-bottom: 7px;
-        }
-
-        .counter-item strong {
-            font-size: 26px;
-            color: #4f46e5;
-        }
-
-        footer {
-            text-align: center;
-            color: #64748b;
-            font-size: 13px;
-            padding: 8px;
-        }
-
-        /* Mobile */
-        @media (max-width: 600px) {
-            body {
-                padding: 18px 10px;
-            }
-
-            .header {
-                padding: 30px 18px;
-                border-radius: 18px;
-            }
-
-            .header h1 {
-                font-size: 27px;
-            }
-
-            .add-task-section,
-            .task-section,
-            .counter-section {
-                padding: 20px 16px;
-                border-radius: 16px;
-            }
-
-            .input-group {
-                flex-direction: column;
-            }
-
-            #addTaskBtn {
-                padding: 13px;
-            }
-
-            .task-item {
-                align-items: flex-start;
-                flex-wrap: wrap;
-            }
-
-            .task-name {
-                width: calc(100% - 40px);
-                flex: none;
-            }
-
-            .complete-btn,
-            .delete-btn {
-                flex: 1;
-            }
-
-            .counter {
-                gap: 8px;
-            }
-
-            .counter-item {
-                padding: 15px 5px;
-            }
-
-            .counter-item strong {
-                font-size: 22px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Open Source Issue Tracker</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --green: #16a34a;
+      --orange: #ea580c;
+      --red: #dc2626;
+      --blue: #2563eb;
+      --shadow: 0 8px 25px rgba(15,23,42,.07);
+    }
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .app { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 250px;
+      background: #111827;
+      color: white;
+      padding: 24px 16px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 10;
+    }
+    .brand { display: flex; gap: 12px; align-items: center; margin: 0 10px 32px; }
+    .brand-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: linear-gradient(135deg,#6366f1,#8b5cf6);
+      display: grid; place-items: center; font-weight: 800;
+    }
+    .brand h1 { font-size: 16px; }
+    .brand p { color: #9ca3af; font-size: 11px; margin-top: 2px; }
+    .nav-title { color:#6b7280; text-transform:uppercase; font-size:10px; font-weight:700; margin: 0 12px 8px; }
+    .nav button {
+      width:100%; border:0; background:transparent; color:#cbd5e1;
+      text-align:left; padding:12px; border-radius:10px; cursor:pointer;
+      margin-bottom:4px; font-size:14px;
+    }
+    .nav button:hover,.nav button.active { background:#1f2937; color:#fff; }
+    .nav button span { margin-right:10px; }
+    main { margin-left:250px; width:calc(100% - 250px); }
+    .topbar {
+      height:70px; background:#fff; border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; padding:0 32px;
+      position:sticky; top:0; z-index:5;
+    }
+    .topbar h2 { font-size:20px; }
+    .top-actions { display:flex; align-items:center; gap:12px; }
+    .avatar { width:38px; height:38px; border-radius:50%; background:#e0e7ff; color:#4338ca; display:grid; place-items:center; font-weight:700; }
+    .content { padding:30px; max-width:1250px; margin:auto; }
+    .page { display:none; }
+    .page.active { display:block; }
+    .welcome { margin-bottom:24px; }
+    .welcome h3 { font-size:27px; margin-bottom:5px; }
+    .welcome p { color:var(--muted); }
+    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:24px; }
+    .stat {
+      background:var(--card); border:1px solid var(--border); border-radius:15px;
+      padding:20px; box-shadow:var(--shadow);
+    }
+    .stat-top { display:flex; justify-content:space-between; align-items:center; color:var(--muted); font-size:13px; }
+    .stat-icon { width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:#eef2ff;color:var(--primary); }
+    .stat h4 { font-size:30px; margin-top:12px; }
+    .grid { display:grid; grid-template-columns:1.5fr 1fr; gap:20px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:15px; box-shadow:var(--shadow); overflow:hidden; }
+    .card-head { padding:18px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+    .card-head h3 { font-size:16px; }
+    .card-body { padding:20px; }
+    .btn {
+      border:0; border-radius:9px; padding:10px 15px; cursor:pointer; font-weight:600;
+      font-size:13px; transition:.2s;
+    }
+    .btn-primary { background:var(--primary); color:white; }
+    .btn-primary:hover { background:var(--primary-dark); }
+    .btn-light { background:#f3f4f6; color:#374151; }
+    .btn-danger { background:#fee2e2; color:#b91c1c; }
+    .issue-row {
+      display:flex; justify-content:space-between; align-items:center; gap:15px;
+      padding:15px 0; border-bottom:1px solid var(--border);
+    }
+    .issue-row:last-child { border-bottom:0; }
+    .issue-main { min-width:0; }
+    .issue-id { color:var(--muted); font-size:11px; margin-bottom:4px; }
+    .issue-title { font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .issue-meta { color:var(--muted); font-size:12px; margin-top:5px; }
+    .badges { display:flex; gap:7px; flex-wrap:wrap; margin-top:8px; }
+    .badge { padding:4px 8px; border-radius:999px; font-size:11px; font-weight:700; display:inline-block; }
+    .status-open { background:#dcfce7; color:#166534; }
+    .status-progress { background:#dbeafe; color:#1d4ed8; }
+    .status-closed { background:#e5e7eb; color:#374151; }
+    .type-bug { background:#fee2e2; color:#b91c1c; }
+    .type-feature { background:#ede9fe; color:#6d28d9; }
+    .type-improvement { background:#ffedd5; color:#c2410c; }
+    .type-documentation { background:#cffafe; color:#0e7490; }
+    .priority-high { color:#dc2626; }
+    .priority-medium { color:#d97706; }
+    .priority-low { color:#16a34a; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    .field { margin-bottom:17px; }
+    .field.full { grid-column:1/-1; }
+    label { display:block; font-size:13px; font-weight:700; margin-bottom:7px; }
+    input, textarea, select {
+      width:100%; padding:11px 12px; border:1px solid #d1d5db; border-radius:9px;
+      outline:none; font:inherit; background:#fff;
+    }
+    input:focus, textarea:focus, select:focus { border-color:var(--primary); box-shadow:0 0 0 3px #eef2ff; }
+    textarea { min-height:120px; resize:vertical; }
+    .form-actions { display:flex; justify-content:flex-end; gap:10px; }
+    .toolbar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
+    .toolbar input { flex:1; min-width:220px; }
+    .issue-card { padding:20px; border-bottom:1px solid var(--border); }
+    .issue-card:last-child { border-bottom:0; }
+    .issue-card-top { display:flex; justify-content:space-between; gap:12px; }
+    .issue-card h3 { margin-bottom:6px; }
+    .issue-card p { color:var(--muted); line-height:1.55; font-size:13px; margin-top:10px; }
+    .issue-actions { display:flex; gap:8px; align-items:flex-start; }
+    .empty { text-align:center; padding:45px 15px; color:var(--muted); }
+    .empty strong { display:block; color:var(--text); margin-bottom:5px; }
+    .toast {
+      position:fixed; right:25px; bottom:25px; background:#111827; color:white;
+      padding:13px 17px; border-radius:10px; opacity:0; transform:translateY(10px);
+      transition:.25s; z-index:100;
+    }
+    .toast.show { opacity:1; transform:translateY(0); }
+    .progress { height:8px; background:#e5e7eb; border-radius:20px; overflow:hidden; margin:9px 0 18px; }
+    .progress div { height:100%; background:var(--primary); border-radius:20px; }
+    .summary-line { display:flex; justify-content:space-between; font-size:13px; margin:9px 0; }
+    @media(max-width:900px){
+      .sidebar{width:210px} main{margin-left:210px;width:calc(100% - 210px)}
+      .stats{grid-template-columns:repeat(2,1fr)} .grid{grid-template-columns:1fr}
+    }
+    @media(max-width:650px){
+      .sidebar{position:static;width:100%;height:auto;padding:12px;display:flex;align-items:center;gap:10px}
+      .app{display:block}.brand{margin:0}.nav-title{display:none}.nav{display:flex;overflow:auto}
+      .nav button{white-space:nowrap;margin:0 2px}.nav button span{margin-right:4px}
+      main{margin-left:0;width:100%}.topbar{padding:0 16px}.content{padding:18px}
+      .stats{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}
+    }
+  </style>
 </head>
-
 <body>
-    <main class="container">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">IT</div>
+      <div><h1>Issue Tracker</h1><p>Open Source Project</p></div>
+    </div>
+    <div class="nav-title">Navigation</div>
+    <nav class="nav">
+      <button class="active" data-page="dashboard"><span>▦</span>Dashboard</button>
+      <button data-page="issues"><span>☷</span>Issue List</button>
+      <button data-page="create"><span>＋</span>Create Issue</button>
+    </nav>
+  </aside>
 
-        <header class="header">
-            <h1>📚 Student Task Tracker</h1>
-            <p>Organize your daily learning tasks and stay productive.</p>
-        </header>
+  <main>
+    <header class="topbar">
+      <h2 id="pageTitle">Dashboard</h2>
+      <div class="top-actions"><span id="dateText"></span><div class="avatar">U</div></div>
+    </header>
 
-        <section class="add-task-section">
-            <h2>➕ Add Task</h2>
+    <section class="content">
+      <!-- Dashboard -->
+      <div id="dashboard" class="page active">
+        <div class="welcome">
+          <h3>Project Dashboard</h3>
+          <p>Monitor issues, priorities and current project progress.</p>
+        </div>
 
-            <form id="taskForm">
-                <label for="taskInput">Enter your task:</label>
+        <div class="stats">
+          <div class="stat"><div class="stat-top"><span>Total Issues</span><div class="stat-icon">▣</div></div><h4 id="totalCount">0</h4></div>
+          <div class="stat"><div class="stat-top"><span>Open</span><div class="stat-icon">○</div></div><h4 id="openCount">0</h4></div>
+          <div class="stat"><div class="stat-top"><span>In Progress</span><div class="stat-icon">◐</div></div><h4 id="progressCount">0</h4></div>
+          <div class="stat"><div class="stat-top"><span>Closed</span><div class="stat-icon">✓</div></div><h4 id="closedCount">0</h4></div>
+        </div>
 
-                <div class="input-group">
-                    <input
-                        type="text"
-                        id="taskInput"
-                        placeholder="e.g. Complete JavaScript Assignment"
-                        autocomplete="off"
-                    >
-                    <button type="submit" id="addTaskBtn">Add Task</button>
-                </div>
-
-                <span id="errorMessage" class="error-message"></span>
-            </form>
-        </section>
-
-        <section class="task-section">
-            <h2>📝 Task List</h2>
-
-            <ul id="taskList" class="task-list"></ul>
-
-            <p id="emptyMessage" class="empty-message">
-                No tasks yet. Add your first task!
-            </p>
-        </section>
-
-        <section class="counter-section">
-            <h2>📊 Task Summary</h2>
-
-            <div class="counter">
-                <div class="counter-item">
-                    <span class="counter-label">Total Tasks</span>
-                    <strong id="totalTasks">0</strong>
-                </div>
-
-                <div class="counter-item">
-                    <span class="counter-label">Completed</span>
-                    <strong id="completedTasks">0</strong>
-                </div>
-
-                <div class="counter-item">
-                    <span class="counter-label">Pending</span>
-                    <strong id="pendingTasks">0</strong>
-                </div>
+        <div class="grid">
+          <div class="card">
+            <div class="card-head"><h3>Recent Issues</h3><button class="btn btn-light" onclick="showPage('issues')">View all</button></div>
+            <div class="card-body" id="recentIssues"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Project Progress</h3></div>
+            <div class="card-body">
+              <div class="summary-line"><span>Open</span><strong id="pOpen">0</strong></div>
+              <div class="progress"><div id="barOpen" style="width:0%"></div></div>
+              <div class="summary-line"><span>In Progress</span><strong id="pProgress">0</strong></div>
+              <div class="progress"><div id="barProgress" style="width:0%"></div></div>
+              <div class="summary-line"><span>Closed</span><strong id="pClosed">0</strong></div>
+              <div class="progress"><div id="barClosed" style="width:0%"></div></div>
             </div>
-        </section>
+          </div>
+        </div>
+      </div>
 
-        <footer>
-            <p>Student Task Tracker • HTML, CSS & JavaScript</p>
-        </footer>
-    </main>
+      <!-- Issues -->
+      <div id="issues" class="page">
+        <div class="welcome">
+          <h3>Issue List</h3>
+          <p>Search, filter and manage all project issues.</p>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="toolbar">
+              <input id="searchInput" type="search" placeholder="Search by issue title or description..." oninput="renderIssues()" />
+              <select id="statusFilter" onchange="renderIssues()">
+                <option value="All">All Status</option><option>Open</option><option>In Progress</option><option>Closed</option>
+              </select>
+              <select id="typeFilter" onchange="renderIssues()">
+                <option value="All">All Types</option><option>Bug</option><option>Feature</option><option>Improvement</option><option>Documentation</option>
+              </select>
+              <select id="priorityFilter" onchange="renderIssues()">
+                <option value="All">All Priority</option><option>High</option><option>Medium</option><option>Low</option>
+              </select>
+              <button class="btn btn-primary" onclick="showPage('create')">+ New Issue</button>
+            </div>
+            <div id="issueList"></div>
+          </div>
+        </div>
+      </div>
 
-    <script>
-        const taskForm = document.getElementById("taskForm");
-        const taskInput = document.getElementById("taskInput");
-        const taskList = document.getElementById("taskList");
-        const emptyMessage = document.getElementById("emptyMessage");
-        const errorMessage = document.getElementById("errorMessage");
+      <!-- Create -->
+      <div id="create" class="page">
+        <div class="welcome">
+          <h3>Create New Issue</h3>
+          <p>Add a bug, feature, improvement or documentation task.</p>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <form id="issueForm">
+              <div class="form-grid">
+                <div class="field full">
+                  <label for="title">Issue Title *</label>
+                  <input id="title" required placeholder="Example: Login button not working" />
+                </div>
+                <div class="field full">
+                  <label for="description">Description *</label>
+                  <textarea id="description" required placeholder="Describe the issue clearly..."></textarea>
+                </div>
+                <div class="field">
+                  <label for="type">Issue Type</label>
+                  <select id="type"><option>Bug</option><option>Feature</option><option>Improvement</option><option>Documentation</option></select>
+                </div>
+                <div class="field">
+                  <label for="priority">Priority</label>
+                  <select id="priority"><option>Low</option><option selected>Medium</option><option>High</option></select>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn btn-light" onclick="showPage('issues')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create Issue</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<div id="toast" class="toast"></div>
 
-        const totalTasks = document.getElementById("totalTasks");
-        const completedTasks = document.getElementById("completedTasks");
-        const pendingTasks = document.getElementById("pendingTasks");
+<script>
+  const starterIssues = [
+    {id:101,title:"Login button not working",description:"Login button does not respond when clicked.",type:"Bug",priority:"High",status:"Open"},
+    {id:102,title:"Add dark mode",description:"Add a dark mode option for the application.",type:"Feature",priority:"Medium",status:"In Progress"},
+    {id:103,title:"Update project documentation",description:"Improve setup and usage documentation.",type:"Documentation",priority:"Low",status:"Closed"},
+    {id:104,title:"Improve issue card design",description:"Make issue cards clearer and easier to scan.",type:"Improvement",priority:"Medium",status:"Open"},
+    {id:105,title:"Add issue priority filter",description:"Allow users to filter issues by priority.",type:"Feature",priority:"High",status:"Open"}
+  ];
 
-        let tasks = [];
+  let issues = JSON.parse(localStorage.getItem("openSourceIssues") || "null") || starterIssues;
 
-        taskForm.addEventListener("submit", function(event) {
-            event.preventDefault();
+  function save() { localStorage.setItem("openSourceIssues", JSON.stringify(issues)); }
 
-            const taskText = taskInput.value.trim();
+  function showPage(page) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById(page).classList.add("active");
+    document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("active", b.dataset.page === page));
+    const titles = {dashboard:"Dashboard",issues:"Issue List",create:"Create Issue"};
+    document.getElementById("pageTitle").textContent = titles[page];
+    if(page === "dashboard") renderDashboard();
+    if(page === "issues") renderIssues();
+    history.replaceState(null,"","#"+page);
+  }
 
-            if (taskText === "") {
-                errorMessage.textContent = "Please enter a task.";
-                taskInput.focus();
-                return;
-            }
+  document.querySelectorAll(".nav button").forEach(btn => btn.addEventListener("click", () => showPage(btn.dataset.page)));
 
-            errorMessage.textContent = "";
+  function badgeClass(type) {
+    return "type-" + type.toLowerCase();
+  }
+  function statusClass(status) {
+    return status === "In Progress" ? "status-progress" : "status-" + status.toLowerCase();
+  }
 
-            tasks.push({
-                id: Date.now(),
-                name: taskText,
-                completed: false
-            });
+  function issueMarkup(issue, compact=false) {
+    return `<div class="${compact ? 'issue-row' : 'issue-card'}">
+      <div class="issue-main">
+        <div class="issue-id">#${issue.id}</div>
+        <div class="issue-title">${escapeHtml(issue.title)}</div>
+        <div class="badges">
+          <span class="badge ${badgeClass(issue.type)}">${issue.type}</span>
+          <span class="badge ${statusClass(issue.status)}">${issue.status}</span>
+          <span class="badge priority-${issue.priority.toLowerCase()}">Priority: ${issue.priority}</span>
+        </div>
+        ${compact ? `<div class="issue-meta">${escapeHtml(issue.description)}</div>` : `<p>${escapeHtml(issue.description)}</p>`}
+      </div>
+      ${compact ? "" : `<div class="issue-actions">
+        <select aria-label="Change status" onchange="changeStatus(${issue.id}, this.value)">
+          <option ${issue.status==="Open"?"selected":""}>Open</option>
+          <option ${issue.status==="In Progress"?"selected":""}>In Progress</option>
+          <option ${issue.status==="Closed"?"selected":""}>Closed</option>
+        </select>
+        <button class="btn btn-danger" onclick="deleteIssue(${issue.id})">Delete</button>
+      </div>`}
+    </div>`;
+  }
 
-            taskInput.value = "";
-            taskInput.focus();
+  function renderDashboard() {
+    const total = issues.length;
+    const open = issues.filter(i=>i.status==="Open").length;
+    const progress = issues.filter(i=>i.status==="In Progress").length;
+    const closed = issues.filter(i=>i.status==="Closed").length;
+    document.getElementById("totalCount").textContent = total;
+    document.getElementById("openCount").textContent = open;
+    document.getElementById("progressCount").textContent = progress;
+    document.getElementById("closedCount").textContent = closed;
+    document.getElementById("pOpen").textContent=open;
+    document.getElementById("pProgress").textContent=progress;
+    document.getElementById("pClosed").textContent=closed;
+    const pct = n => total ? Math.round(n/total*100) : 0;
+    document.getElementById("barOpen").style.width=pct(open)+"%";
+    document.getElementById("barProgress").style.width=pct(progress)+"%";
+    document.getElementById("barClosed").style.width=pct(closed)+"%";
+    const recent = [...issues].slice(-5).reverse();
+    document.getElementById("recentIssues").innerHTML = recent.length ? recent.map(i=>issueMarkup(i,true)).join("") : `<div class="empty"><strong>No issues yet</strong>Create your first issue.</div>`;
+  }
 
-            renderTasks();
-        });
+  function renderIssues() {
+    const q = document.getElementById("searchInput").value.toLowerCase().trim();
+    const status = document.getElementById("statusFilter").value;
+    const type = document.getElementById("typeFilter").value;
+    const priority = document.getElementById("priorityFilter").value;
+    const filtered = issues.filter(i =>
+      (!q || i.title.toLowerCase().includes(q) || i.description.toLowerCase().includes(q)) &&
+      (status==="All" || i.status===status) &&
+      (type==="All" || i.type===type) &&
+      (priority==="All" || i.priority===priority)
+    );
+    document.getElementById("issueList").innerHTML = filtered.length
+      ? filtered.map(i=>issueMarkup(i)).join("")
+      : `<div class="empty"><strong>No matching issues</strong>Try changing your search or filters.</div>`;
+  }
 
-        function renderTasks() {
-            taskList.innerHTML = "";
+  document.getElementById("issueForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const nextId = issues.length ? Math.max(...issues.map(i=>i.id)) + 1 : 101;
+    issues.push({
+      id: nextId,
+      title: document.getElementById("title").value.trim(),
+      description: document.getElementById("description").value.trim(),
+      type: document.getElementById("type").value,
+      priority: document.getElementById("priority").value,
+      status: "Open"
+    });
+    save();
+    e.target.reset();
+    document.getElementById("priority").value="Medium";
+    toast("Issue created successfully!");
+    showPage("issues");
+  });
 
-            if (tasks.length === 0) {
-                emptyMessage.style.display = "block";
-            } else {
-                emptyMessage.style.display = "none";
-            }
+  function changeStatus(id,status) {
+    const issue = issues.find(i=>i.id===id);
+    if(issue){ issue.status=status; save(); renderIssues(); renderDashboard(); toast("Issue status updated."); }
+  }
 
-            tasks.forEach(function(task) {
-                const li = document.createElement("li");
-                li.className = "task-item";
+  function deleteIssue(id) {
+    if(!confirm("Delete this issue?")) return;
+    issues = issues.filter(i=>i.id!==id);
+    save(); renderIssues(); renderDashboard(); toast("Issue deleted.");
+  }
 
-                if (task.completed) {
-                    li.classList.add("completed");
-                }
+  function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  }
 
-                const checkbox = document.createElement("input");
-                checkbox.type = "checkbox";
-                checkbox.className = "task-check";
-                checkbox.checked = task.completed;
+  function toast(msg) {
+    const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
+    setTimeout(()=>t.classList.remove("show"),2200);
+  }
 
-                checkbox.addEventListener("change", function() {
-                    task.completed = checkbox.checked;
-                    renderTasks();
-                });
+  document.getElementById("dateText").textContent = new Date().toLocaleDateString(undefined,{day:"2-digit",month:"short",year:"numeric"});
+  renderDashboard();
 
-                const taskName = document.createElement("span");
-                taskName.className = "task-name";
-                taskName.textContent = task.name;
-
-                const completeButton = document.createElement("button");
-                completeButton.className = "complete-btn";
-                completeButton.textContent = task.completed ? "Undo" : "Complete";
-
-                completeButton.addEventListener("click", function() {
-                    task.completed = !task.completed;
-                    renderTasks();
-                });
-
-                const deleteButton = document.createElement("button");
-                deleteButton.className = "delete-btn";
-                deleteButton.textContent = "Delete";
-
-                deleteButton.addEventListener("click", function() {
-                    tasks = tasks.filter(function(item) {
-                        return item.id !== task.id;
-                    });
-
-                    renderTasks();
-                });
-
-                li.appendChild(checkbox);
-                li.appendChild(taskName);
-                li.appendChild(completeButton);
-                li.appendChild(deleteButton);
-
-                taskList.appendChild(li);
-            });
-
-            updateCounters();
-        }
-
-        function updateCounters() {
-            const total = tasks.length;
-            const completed = tasks.filter(function(task) {
-                return task.completed;
-            }).length;
-
-            const pending = total - completed;
-
-            totalTasks.textContent = total;
-            completedTasks.textContent = completed;
-            pendingTasks.textContent = pending;
-        }
-
-        renderTasks();
-    </script>
+  const initial = location.hash.replace("#","");
+  if(["dashboard","issues","create"].includes(initial)) showPage(initial);
+</script>
 </body>
 </html>
