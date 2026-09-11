@@ -3,302 +3,328 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Shopping Bill Calculator</title>
+<title>OTP Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  :root{
+    --bg:#0b1220;
+    --panel:#141d33;
+    --panel-2:#101828;
+    --border:#223154;
+    --text:#e8ecf5;
+    --muted:#7c8bab;
+    --accent:#f2b84b;
+    --accent-dim:rgba(242,184,75,0.14);
+    --ok:#5fbf8b;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 16px;
+    background:
+      radial-gradient(1100px 600px at 50% -10%, #16223e 0%, var(--bg) 60%);
+    font-family:'Space Grotesk', system-ui, sans-serif;
+    color:var(--text);
+  }
+  .scene{
+    width:100%;
+    max-width:420px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+  }
 
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Inter,Arial,sans-serif;
-  min-height:100vh;
-  background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 48%,#e0f2fe 100%);
-  color:#172033;
-}
-.wrapper{width:min(1080px,94%);margin:0 auto;padding:35px 0 50px}
+  /* Device */
+  .device{
+    background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:28px 24px 24px;
+    box-shadow:0 30px 60px -25px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
+    position:relative;
+  }
+  .device::before{
+    content:"";
+    position:absolute;
+    top:14px; left:50%;
+    transform:translateX(-50%);
+    width:34px; height:4px;
+    border-radius:2px;
+    background:var(--border);
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:14px;
+    margin-bottom:22px;
+  }
+  .brand-name{
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.02em;
+    color:var(--muted);
+  }
+  .brand-dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--ok);
+    box-shadow:0 0 0 3px rgba(95,191,139,0.15);
+  }
 
-/* Header */
-.hero{
-  position:relative;
-  overflow:hidden;
-  background:linear-gradient(135deg,#4338ca,#6366f1 55%,#7c3aed);
-  color:#fff;
-  border-radius:28px;
-  padding:34px 36px;
-  margin-bottom:24px;
-  box-shadow:0 18px 45px rgba(67,56,202,.25);
-}
-.hero:before,.hero:after{
-  content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.10)
-}
-.hero:before{width:180px;height:180px;right:-45px;top:-80px}
-.hero:after{width:120px;height:120px;right:110px;bottom:-70px}
-.badge{
-  display:inline-flex;align-items:center;gap:7px;
-  background:rgba(255,255,255,.16);
-  border:1px solid rgba(255,255,255,.2);
-  padding:7px 12px;border-radius:30px;font-size:12px;font-weight:700;
-  margin-bottom:14px;
-}
-.hero h1{position:relative;margin:0;font-size:clamp(28px,5vw,44px);letter-spacing:-1.5px}
-.hero p{position:relative;margin:10px 0 0;color:#e0e7ff;max-width:650px;line-height:1.6}
+  .display-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+    padding:22px 10px 26px;
+    background:radial-gradient(180px 100px at 50% 0%, var(--accent-dim), transparent 70%);
+    border-radius:16px;
+    margin-bottom:20px;
+  }
 
-/* Cards */
-.card{
-  background:rgba(255,255,255,.94);
-  border:1px solid rgba(226,232,240,.9);
-  border-radius:24px;
-  padding:28px;
-  box-shadow:0 12px 35px rgba(15,23,42,.08);
-  margin-bottom:22px;
-}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}
-.section-head h2{margin:0;font-size:20px}
-.section-head span{font-size:12px;color:#64748b;background:#f1f5f9;padding:7px 11px;border-radius:20px}
+  .ring-wrap{ position:relative; width:56px; height:56px; }
+  .ring-wrap svg{ transform:rotate(-90deg); }
+  .ring-bg{ fill:none; stroke:var(--border); stroke-width:4; }
+  .ring-fg{ fill:none; stroke:var(--accent); stroke-width:4; stroke-linecap:round;
+    transition:stroke-dashoffset 1s linear; }
+  .ring-label{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14px; color:var(--muted);
+  }
 
-/* Product grid */
-.products{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
-.product{
-  position:relative;
-  border:1px solid #e2e8f0;
-  border-radius:19px;
-  padding:20px;
-  background:linear-gradient(180deg,#fff,#f8fafc);
-  transition:.2s;
-}
-.product:hover{transform:translateY(-3px);box-shadow:0 10px 25px rgba(15,23,42,.08)}
-.product-top{display:flex;align-items:center;gap:11px;margin-bottom:16px}
-.icon{
-  width:42px;height:42px;display:grid;place-items:center;
-  border-radius:13px;background:#eef2ff;font-size:21px
-}
-.product h3{margin:0;font-size:16px}
-.product small{color:#94a3b8;font-size:11px}
-label{display:block;margin:13px 0 7px;font-size:12px;font-weight:700;color:#475569}
-.input-wrap{position:relative}
-.prefix{
-  position:absolute;left:12px;top:50%;transform:translateY(-50%);
-  color:#64748b;font-weight:700;font-size:14px
-}
-input{
-  width:100%;padding:12px 12px 12px 29px;
-  border:1px solid #cbd5e1;border-radius:11px;
-  background:#fff;font-size:14px;outline:none;transition:.2s
-}
-input:focus{border-color:#6366f1;box-shadow:0 0 0 4px rgba(99,102,241,.11)}
-.qty input{padding-left:12px}
+  .digits{
+    display:flex;
+    gap:8px;
+  }
+  .digit{
+    width:38px; height:52px;
+    display:flex; align-items:center; justify-content:center;
+    background:#0d1626;
+    border:1px solid var(--border);
+    border-radius:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:26px;
+    font-weight:600;
+    color:var(--accent);
+    text-shadow:0 0 14px rgba(242,184,75,0.35);
+    font-variant-numeric:tabular-nums;
+  }
+  .digit.placeholder{ color:var(--border); text-shadow:none; }
 
-/* Buttons */
-.actions{display:flex;gap:12px;margin-top:24px}
-button{
-  border:0;border-radius:12px;padding:13px 20px;
-  font:700 14px Inter,Arial;cursor:pointer;transition:.2s
-}
-.calculate{
-  flex:1;color:white;
-  background:linear-gradient(135deg,#4f46e5,#7c3aed);
-  box-shadow:0 8px 18px rgba(79,70,229,.22)
-}
-.calculate:hover{transform:translateY(-2px)}
-.reset{background:#f1f5f9;color:#334155}
-.reset:hover{background:#e2e8f0}
+  .status-line{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--muted);
+    min-height:16px;
+  }
 
-/* Error */
-.error{
-  display:none;margin-top:15px;padding:11px 13px;
-  border-radius:10px;background:#fef2f2;color:#b91c1c;font-size:12px;font-weight:600
-}
+  .generate-btn{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:var(--accent);
+    color:#241705;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:transform 0.12s ease, box-shadow 0.2s ease;
+    box-shadow:0 8px 20px -8px rgba(242,184,75,0.55);
+  }
+  .generate-btn:hover{ box-shadow:0 10px 26px -8px rgba(242,184,75,0.7); }
+  .generate-btn:active{ transform:scale(0.97); }
+  .generate-btn:focus-visible{ outline:2px solid var(--text); outline-offset:3px; }
 
-/* Bill */
-.bill{display:none}
-.bill.show{display:block;animation:show .35s ease}
-@keyframes show{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.bill-header{
-  display:flex;justify-content:space-between;align-items:center;
-  padding-bottom:17px;border-bottom:1px solid #e2e8f0
-}
-.bill-header h2{margin:0;font-size:20px}
-.status{font-size:11px;font-weight:700;color:#15803d;background:#dcfce7;padding:7px 10px;border-radius:20px}
-.bill-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:15px 0;border-bottom:1px solid #f1f5f9;font-size:14px
-}
-.bill-row span:first-child{color:#64748b}
-.bill-row strong{font-size:14px}
-.total{font-size:17px!important;color:#172033!important}
-.discount{color:#15803d!important}
-.final{
-  display:flex;justify-content:space-between;align-items:center;
-  margin-top:18px;padding:19px 20px;border-radius:16px;
-  background:linear-gradient(135deg,#eef2ff,#f5f3ff);
-  border:1px solid #ddd6fe
-}
-.final span:first-child{font-weight:700}
-.final span:last-child{font-size:25px;font-weight:800;color:#4338ca}
-.note{text-align:center;color:#64748b;font-size:12px;margin:15px 0 0}
+  /* Log panel */
+  .log{
+    background:var(--panel-2);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:16px 18px;
+  }
+  .log-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+  }
+  .log-title{ font-size:13px; color:var(--muted); }
+  .log-count{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--muted); }
+  .log-list{
+    list-style:none;
+    margin:0; padding:0;
+    display:flex; flex-direction:column;
+    gap:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+  }
+  .log-list li{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:7px 10px;
+    border-radius:8px;
+    background:rgba(255,255,255,0.02);
+    color:var(--text);
+  }
+  .log-list li .run{ color:var(--muted); }
+  .log-list li .code{ color:var(--accent); }
+  .log-list li .ok{ color:var(--ok); }
+  .log-empty{ color:var(--muted); font-family:'IBM Plex Mono', monospace; font-size:12.5px; padding:6px 2px; }
 
-/* Footer */
-.footer{text-align:center;color:#94a3b8;font-size:11px;margin-top:8px}
+  @keyframes fadeIn{
+    from{ opacity:0; transform:translateY(-4px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .log-list li.new{ animation:fadeIn 0.25s ease; }
 
-@media(max-width:760px){
-  .wrapper{width:92%;padding-top:20px}
-  .hero{padding:26px 22px;border-radius:22px}
-  .card{padding:20px;border-radius:20px}
-  .products{grid-template-columns:1fr}
-  .section-head{align-items:flex-start;flex-direction:column}
-}
-@media(max-width:420px){
-  .actions{flex-direction:column}
-  .final span:last-child{font-size:21px}
-}
+  @media (prefers-reduced-motion: reduce){
+    .generate-btn, .ring-fg, .log-list li.new{ animation:none !important; transition:none !important; }
+  }
 </style>
 </head>
 <body>
 
-<div class="wrapper">
-
-  <header class="hero">
-    <div class="badge">🧾 JAVA PROGRAMMING BASICS</div>
-    <h1>Smart Shopping Bill</h1>
-    <p>Enter product prices and quantities. We'll calculate each amount, your total bill, discount, and final payable amount automatically.</p>
-  </header>
-
-  <section class="card">
-    <div class="section-head">
-      <h2>🛍️ Product Details</h2>
-      <span>3 products required</span>
-    </div>
-
-    <div class="products">
-      <div class="product">
-        <div class="product-top">
-          <div class="icon">📦</div>
-          <div><h3>Product 1</h3><small>Item details</small></div>
-        </div>
-        <label for="price1">PRICE</label>
-        <div class="input-wrap">
-          <span class="prefix">₹</span>
-          <input id="price1" type="number" min="0" step="0.01" placeholder="100">
-        </div>
-        <label for="qty1">QUANTITY</label>
-        <div class="input-wrap qty">
-          <input id="qty1" type="number" min="0" step="1" placeholder="2">
-        </div>
+  <div class="scene">
+    <div class="device">
+      <div class="brand">
+        <span class="brand-name">SECURE ACCESS TOKEN</span>
+        <span class="brand-dot" aria-hidden="true"></span>
       </div>
 
-      <div class="product">
-        <div class="product-top">
-          <div class="icon">🛒</div>
-          <div><h3>Product 2</h3><small>Item details</small></div>
+      <div class="display-wrap">
+        <div class="ring-wrap" aria-hidden="true">
+          <svg width="56" height="56">
+            <circle class="ring-bg" cx="28" cy="28" r="24"></circle>
+            <circle class="ring-fg" id="ring" cx="28" cy="28" r="24"
+              stroke-dasharray="150.8" stroke-dashoffset="150.8"></circle>
+          </svg>
+          <span class="ring-label" id="ringLabel">--</span>
         </div>
-        <label for="price2">PRICE</label>
-        <div class="input-wrap">
-          <span class="prefix">₹</span>
-          <input id="price2" type="number" min="0" step="0.01" placeholder="50">
+
+        <div class="digits" id="digits" aria-live="polite" aria-label="One time password">
+          <div class="digit placeholder">-</div>
+          <div class="digit placeholder">-</div>
+          <div class="digit placeholder">-</div>
+          <div class="digit placeholder">-</div>
+          <div class="digit placeholder">-</div>
+          <div class="digit placeholder">-</div>
         </div>
-        <label for="qty2">QUANTITY</label>
-        <div class="input-wrap qty">
-          <input id="qty2" type="number" min="0" step="1" placeholder="3">
-        </div>
+
+        <div class="status-line" id="statusLine">Press generate for a new code</div>
       </div>
 
-      <div class="product">
-        <div class="product-top">
-          <div class="icon">🎁</div>
-          <div><h3>Product 3</h3><small>Item details</small></div>
-        </div>
-        <label for="price3">PRICE</label>
-        <div class="input-wrap">
-          <span class="prefix">₹</span>
-          <input id="price3" type="number" min="0" step="0.01" placeholder="200">
-        </div>
-        <label for="qty3">QUANTITY</label>
-        <div class="input-wrap qty">
-          <input id="qty3" type="number" min="0" step="1" placeholder="1">
-        </div>
+      <button class="generate-btn" id="generateBtn">Generate OTP</button>
+    </div>
+
+    <div class="log">
+      <div class="log-header">
+        <span class="log-title">Run history</span>
+        <span class="log-count" id="logCount">0 runs</span>
       </div>
+      <ul class="log-list" id="logList"></ul>
+      <div class="log-empty" id="logEmpty">No runs yet — generate a code to see it logged here.</div>
     </div>
-
-    <div id="error" class="error">⚠️ Please enter valid prices and whole-number quantities for all 3 products.</div>
-
-    <div class="actions">
-      <button class="calculate" onclick="calculateBill()">Calculate My Bill →</button>
-      <button class="reset" onclick="resetBill()">↻ Reset</button>
-    </div>
-  </section>
-
-  <section id="bill" class="card bill">
-    <div class="bill-header">
-      <h2>🧾 Shopping Bill</h2>
-      <div class="status">✓ CALCULATED</div>
-    </div>
-
-    <div class="bill-row"><span>Product 1 Amount</span><strong id="amount1">₹0.00</strong></div>
-    <div class="bill-row"><span>Product 2 Amount</span><strong id="amount2">₹0.00</strong></div>
-    <div class="bill-row"><span>Product 3 Amount</span><strong id="amount3">₹0.00</strong></div>
-    <div class="bill-row"><span class="total">Total Bill</span><strong class="total" id="total">₹0.00</strong></div>
-    <div class="bill-row"><span class="discount">Discount (10% if total ≥ ₹500)</span><strong class="discount" id="discount">₹0.00</strong></div>
-
-    <div class="final">
-      <span>Final Amount</span>
-      <span id="finalAmount">₹0.00</span>
-    </div>
-    <p class="note" id="discountMessage"></p>
-  </section>
-
-  <div class="footer">Shopping Bill Calculator • Basic Java Console Application concept</div>
-</div>
+  </div>
 
 <script>
-function money(value){
-  return "₹" + value.toFixed(2);
-}
+  const digitsEl = document.getElementById('digits');
+  const statusLine = document.getElementById('statusLine');
+  const generateBtn = document.getElementById('generateBtn');
+  const logList = document.getElementById('logList');
+  const logEmpty = document.getElementById('logEmpty');
+  const logCount = document.getElementById('logCount');
+  const ring = document.getElementById('ring');
+  const ringLabel = document.getElementById('ringLabel');
 
-function calculateBill(){
-  const prices = [1,2,3].map(i => Number(document.getElementById("price"+i).value));
-  const quantities = [1,2,3].map(i => Number(document.getElementById("qty"+i).value));
-  const error = document.getElementById("error");
+  const CIRCUMFERENCE = 150.8;
+  const EXPIRY_SECONDS = 30;
+  let runCount = 0;
+  let timerInterval = null;
 
-  if(
-    prices.some(p => !Number.isFinite(p) || p < 0) ||
-    quantities.some(q => !Number.isFinite(q) || q < 0 || !Number.isInteger(q))
-  ){
-    error.style.display = "block";
-    document.getElementById("bill").classList.remove("show");
-    return;
+  function randomOtp(){
+    // 6-digit OTP, always between 100000 and 999999
+    return Math.floor(100000 + Math.random() * 900000);
   }
 
-  error.style.display = "none";
+  function renderDigits(otpString, animate){
+    const boxes = digitsEl.querySelectorAll('.digit');
+    boxes.forEach((box, i) => {
+      box.classList.remove('placeholder');
+      if(!animate){
+        box.textContent = otpString[i];
+        return;
+      }
+      let ticks = 0;
+      const maxTicks = 6 + i * 2;
+      const roll = setInterval(() => {
+        box.textContent = Math.floor(Math.random() * 10);
+        ticks++;
+        if(ticks >= maxTicks){
+          clearInterval(roll);
+          box.textContent = otpString[i];
+        }
+      }, 35);
+    });
+  }
 
-  const amounts = prices.map((p,i) => p * quantities[i]);
-  const total = amounts.reduce((sum,a) => sum + a, 0);
-  const discount = total >= 500 ? total * 0.10 : 0;
-  const finalAmount = total - discount;
+  function startExpiry(){
+    clearInterval(timerInterval);
+    let remaining = EXPIRY_SECONDS;
+    ringLabel.textContent = remaining;
+    ring.style.strokeDashoffset = 0;
+    statusLine.textContent = 'Code active — expires in ' + remaining + 's';
 
-  document.getElementById("amount1").textContent = money(amounts[0]);
-  document.getElementById("amount2").textContent = money(amounts[1]);
-  document.getElementById("amount3").textContent = money(amounts[2]);
-  document.getElementById("total").textContent = money(total);
-  document.getElementById("discount").textContent = money(discount);
-  document.getElementById("finalAmount").textContent = money(finalAmount);
+    timerInterval = setInterval(() => {
+      remaining--;
+      const offset = CIRCUMFERENCE * (1 - remaining / EXPIRY_SECONDS);
+      ring.style.strokeDashoffset = offset;
+      ringLabel.textContent = remaining > 0 ? remaining : '0';
 
-  document.getElementById("discountMessage").textContent =
-    discount > 0
-      ? "🎉 10% discount applied because your bill is ₹500 or more."
-      : "No discount applied — discount starts at ₹500.";
+      if(remaining <= 0){
+        clearInterval(timerInterval);
+        statusLine.textContent = 'Code expired — generate a new one';
+      } else {
+        statusLine.textContent = 'Code active — expires in ' + remaining + 's';
+      }
+    }, 1000);
+  }
 
-  document.getElementById("bill").classList.add("show");
-  document.getElementById("bill").scrollIntoView({behavior:"smooth",block:"start"});
-}
+  function logRun(otp){
+    runCount++;
+    logEmpty.style.display = 'none';
 
-function resetBill(){
-  [1,2,3].forEach(i=>{
-    document.getElementById("price"+i).value="";
-    document.getElementById("qty"+i).value="";
+    const li = document.createElement('li');
+    li.classList.add('new');
+    li.innerHTML =
+      '<span class="run">Run ' + String(runCount).padStart(2, '0') + '</span>' +
+      '<span class="code">' + otp + '</span>' +
+      '<span class="ok">6 digits ✓</span>';
+
+    logList.prepend(li);
+
+    // keep the visible history compact
+    while(logList.children.length > 6){
+      logList.removeChild(logList.lastChild);
+    }
+    logCount.textContent = runCount + (runCount === 1 ? ' run' : ' runs');
+  }
+
+  generateBtn.addEventListener('click', () => {
+    const otp = randomOtp().toString();
+    renderDigits(otp, true);
+    startExpiry();
+    logRun(otp);
   });
-  document.getElementById("bill").classList.remove("show");
-  document.getElementById("error").style.display="none";
-}
 </script>
 </body>
 </html>
