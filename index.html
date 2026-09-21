@@ -3,328 +3,302 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OTP Generator</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<title>ExpenseFlow | Daily Expense Analyzer</title>
 <style>
-  :root{
-    --bg:#0b1220;
-    --panel:#141d33;
-    --panel-2:#101828;
-    --border:#223154;
-    --text:#e8ecf5;
-    --muted:#7c8bab;
-    --accent:#f2b84b;
-    --accent-dim:rgba(242,184,75,0.14);
-    --ok:#5fbf8b;
-  }
-  *{box-sizing:border-box;}
-  html,body{height:100%;}
-  body{
-    margin:0;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:32px 16px;
-    background:
-      radial-gradient(1100px 600px at 50% -10%, #16223e 0%, var(--bg) 60%);
-    font-family:'Space Grotesk', system-ui, sans-serif;
-    color:var(--text);
-  }
-  .scene{
-    width:100%;
-    max-width:420px;
-    display:flex;
-    flex-direction:column;
-    gap:18px;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-  /* Device */
-  .device{
-    background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
-    border:1px solid var(--border);
-    border-radius:22px;
-    padding:28px 24px 24px;
-    box-shadow:0 30px 60px -25px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
-    position:relative;
-  }
-  .device::before{
-    content:"";
-    position:absolute;
-    top:14px; left:50%;
-    transform:translateX(-50%);
-    width:34px; height:4px;
-    border-radius:2px;
-    background:var(--border);
-  }
-  .brand{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-top:14px;
-    margin-bottom:22px;
-  }
-  .brand-name{
-    font-size:13px;
-    font-weight:600;
-    letter-spacing:0.02em;
-    color:var(--muted);
-  }
-  .brand-dot{
-    width:7px;height:7px;border-radius:50%;
-    background:var(--ok);
-    box-shadow:0 0 0 3px rgba(95,191,139,0.15);
-  }
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Inter,Arial,sans-serif;
+  min-height:100vh;
+  color:#172033;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(99,102,241,.16),transparent 28%),
+    radial-gradient(circle at 90% 20%,rgba(14,165,233,.14),transparent 30%),
+    #f4f7fb;
+}
+header{
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(15px);
+  border-bottom:1px solid #e7ebf2;
+  position:sticky;top:0;z-index:10;
+}
+.nav{
+  max-width:1180px;margin:auto;padding:17px 22px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:43px;height:43px;border-radius:13px;
+  display:grid;place-items:center;color:white;font-size:21px;font-weight:800;
+  background:linear-gradient(135deg,#6366f1,#0ea5e9);
+  box-shadow:0 8px 20px rgba(79,70,229,.25);
+}
+.brand h1{font-size:18px}.brand small{display:block;color:#8a94a6;font-size:11px;margin-top:2px}
+.status{
+  padding:8px 12px;border-radius:999px;background:#ecfdf3;color:#15803d;
+  font-size:12px;font-weight:700;
+}
+.container{max-width:1180px;margin:30px auto;padding:0 22px}
+.hero{
+  position:relative;overflow:hidden;border-radius:24px;padding:32px;
+  background:linear-gradient(135deg,#18204b,#253e8f 58%,#0ea5e9);
+  color:white;box-shadow:0 20px 45px rgba(30,41,90,.2);
+}
+.hero:after{
+  content:"";position:absolute;width:240px;height:240px;border-radius:50%;
+  right:-80px;top:-100px;background:rgba(255,255,255,.1);
+}
+.hero h2{font-size:30px;letter-spacing:-1px;margin-bottom:8px}
+.hero p{color:#dce5ff;max-width:650px;line-height:1.6}
+.actions{margin-top:25px;display:flex;gap:10px;flex-wrap:wrap}
+.file-label,.btn{
+  border:0;border-radius:11px;padding:12px 17px;font-weight:700;cursor:pointer;
+  font-family:inherit;font-size:13px;
+}
+.file-label{background:white;color:#273574}
+.btn{background:#7c3aed;color:white}.btn.secondary{background:rgba(255,255,255,.14);color:white;border:1px solid rgba(255,255,255,.2)}
+input[type=file]{display:none}
+.file-name{margin-top:13px;color:#dce5ff;font-size:12px}
 
-  .display-wrap{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:16px;
-    padding:22px 10px 26px;
-    background:radial-gradient(180px 100px at 50% 0%, var(--accent-dim), transparent 70%);
-    border-radius:16px;
-    margin-bottom:20px;
-  }
+.message{display:none;margin-top:16px;padding:12px 15px;border-radius:12px;font-size:13px;font-weight:600}
+.message.success{display:block;background:#dcfce7;color:#166534}
+.message.error{display:block;background:#fee2e2;color:#991b1b}
 
-  .ring-wrap{ position:relative; width:56px; height:56px; }
-  .ring-wrap svg{ transform:rotate(-90deg); }
-  .ring-bg{ fill:none; stroke:var(--border); stroke-width:4; }
-  .ring-fg{ fill:none; stroke:var(--accent); stroke-width:4; stroke-linecap:round;
-    transition:stroke-dashoffset 1s linear; }
-  .ring-label{
-    position:absolute; inset:0;
-    display:flex; align-items:center; justify-content:center;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:14px; color:var(--muted);
-  }
+.cards{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:20px 0;
+}
+.card{
+  background:rgba(255,255,255,.9);border:1px solid #e8edf5;border-radius:18px;
+  padding:20px;box-shadow:0 8px 25px rgba(30,41,59,.06);
+}
+.card-top{display:flex;justify-content:space-between;align-items:center}
+.icon{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  font-size:18px;background:#eef2ff;
+}
+.label{font-size:12px;color:#7b8495;font-weight:600;margin-top:13px}
+.value{font-size:25px;font-weight:800;margin-top:5px}
+.green{color:#059669}.purple{color:#6366f1}.orange{color:#ea580c}.blue{color:#0284c7}
 
-  .digits{
-    display:flex;
-    gap:8px;
-  }
-  .digit{
-    width:38px; height:52px;
-    display:flex; align-items:center; justify-content:center;
-    background:#0d1626;
-    border:1px solid var(--border);
-    border-radius:8px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:26px;
-    font-weight:600;
-    color:var(--accent);
-    text-shadow:0 0 14px rgba(242,184,75,0.35);
-    font-variant-numeric:tabular-nums;
-  }
-  .digit.placeholder{ color:var(--border); text-shadow:none; }
+.grid{display:grid;grid-template-columns:1.5fr .9fr;gap:20px}
+.panel{
+  background:rgba(255,255,255,.94);border:1px solid #e8edf5;border-radius:20px;
+  padding:22px;box-shadow:0 8px 25px rgba(30,41,59,.06);
+}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.panel h3{font-size:17px}.tag{font-size:11px;background:#f1f5f9;padding:6px 9px;border-radius:8px;color:#64748b}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;text-transform:uppercase;color:#8993a5;text-align:left;padding:11px 8px;border-bottom:1px solid #edf0f4}
+td{padding:13px 8px;border-bottom:1px solid #f0f2f6;font-size:13px}
+td.amount{font-weight:700}
+.badge{padding:5px 8px;border-radius:999px;font-size:10px;font-weight:700;background:#dcfce7;color:#15803d}
+.badge.invalid{background:#fee2e2;color:#b91c1c}
 
-  .status-line{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    color:var(--muted);
-    min-height:16px;
-  }
+.format{
+  background:linear-gradient(135deg,#f8faff,#eef5ff);border-radius:15px;padding:17px;
+  border:1px solid #dfe8fb;line-height:1.8;font-size:12px;color:#526078;
+}
+code{background:#172554;color:white;padding:3px 7px;border-radius:6px}
+ul{padding-left:18px;margin-top:14px;color:#64748b;font-size:12px;line-height:1.9}
 
-  .generate-btn{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:12px;
-    background:var(--accent);
-    color:#241705;
-    font-family:'Space Grotesk', sans-serif;
-    font-size:15px;
-    font-weight:600;
-    cursor:pointer;
-    transition:transform 0.12s ease, box-shadow 0.2s ease;
-    box-shadow:0 8px 20px -8px rgba(242,184,75,0.55);
-  }
-  .generate-btn:hover{ box-shadow:0 10px 26px -8px rgba(242,184,75,0.7); }
-  .generate-btn:active{ transform:scale(0.97); }
-  .generate-btn:focus-visible{ outline:2px solid var(--text); outline-offset:3px; }
+.empty{text-align:center;padding:38px 10px;color:#94a3b8;font-size:13px}
+.empty-icon{font-size:30px;margin-bottom:8px}
 
-  /* Log panel */
-  .log{
-    background:var(--panel-2);
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:16px 18px;
-  }
-  .log-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:10px;
-  }
-  .log-title{ font-size:13px; color:var(--muted); }
-  .log-count{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--muted); }
-  .log-list{
-    list-style:none;
-    margin:0; padding:0;
-    display:flex; flex-direction:column;
-    gap:6px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12.5px;
-  }
-  .log-list li{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    padding:7px 10px;
-    border-radius:8px;
-    background:rgba(255,255,255,0.02);
-    color:var(--text);
-  }
-  .log-list li .run{ color:var(--muted); }
-  .log-list li .code{ color:var(--accent); }
-  .log-list li .ok{ color:var(--ok); }
-  .log-empty{ color:var(--muted); font-family:'IBM Plex Mono', monospace; font-size:12.5px; padding:6px 2px; }
+footer{text-align:center;padding:28px;color:#8993a5;font-size:11px}
 
-  @keyframes fadeIn{
-    from{ opacity:0; transform:translateY(-4px); }
-    to{ opacity:1; transform:translateY(0); }
-  }
-  .log-list li.new{ animation:fadeIn 0.25s ease; }
-
-  @media (prefers-reduced-motion: reduce){
-    .generate-btn, .ring-fg, .log-list li.new{ animation:none !important; transition:none !important; }
-  }
+@media(max-width:900px){
+ .cards{grid-template-columns:repeat(2,1fr)}
+ .grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+ .container{padding:0 13px;margin-top:18px}
+ .hero{padding:24px 20px}.hero h2{font-size:24px}
+ .cards{grid-template-columns:1fr 1fr;gap:10px}
+ .card{padding:15px}.value{font-size:20px}
+ .panel{padding:15px;overflow:auto}
+ .nav{padding:13px}
+}
 </style>
 </head>
 <body>
 
-  <div class="scene">
-    <div class="device">
-      <div class="brand">
-        <span class="brand-name">SECURE ACCESS TOKEN</span>
-        <span class="brand-dot" aria-hidden="true"></span>
-      </div>
-
-      <div class="display-wrap">
-        <div class="ring-wrap" aria-hidden="true">
-          <svg width="56" height="56">
-            <circle class="ring-bg" cx="28" cy="28" r="24"></circle>
-            <circle class="ring-fg" id="ring" cx="28" cy="28" r="24"
-              stroke-dasharray="150.8" stroke-dashoffset="150.8"></circle>
-          </svg>
-          <span class="ring-label" id="ringLabel">--</span>
-        </div>
-
-        <div class="digits" id="digits" aria-live="polite" aria-label="One time password">
-          <div class="digit placeholder">-</div>
-          <div class="digit placeholder">-</div>
-          <div class="digit placeholder">-</div>
-          <div class="digit placeholder">-</div>
-          <div class="digit placeholder">-</div>
-          <div class="digit placeholder">-</div>
-        </div>
-
-        <div class="status-line" id="statusLine">Press generate for a new code</div>
-      </div>
-
-      <button class="generate-btn" id="generateBtn">Generate OTP</button>
+<header>
+  <div class="nav">
+    <div class="brand">
+      <div class="logo">₹</div>
+      <div><h1>ExpenseFlow</h1><small>Daily Expense Analyzer</small></div>
     </div>
+    <div class="status">● Ready to Analyze</div>
+  </div>
+</header>
 
-    <div class="log">
-      <div class="log-header">
-        <span class="log-title">Run history</span>
-        <span class="log-count" id="logCount">0 runs</span>
-      </div>
-      <ul class="log-list" id="logList"></ul>
-      <div class="log-empty" id="logEmpty">No runs yet — generate a code to see it logged here.</div>
+<main class="container">
+
+<section class="hero">
+  <h2>Turn your expenses into insights.</h2>
+  <p>Upload your <b>expenses.txt</b> file and instantly calculate your total, average, highest expense, and valid records.</p>
+
+  <div class="actions">
+    <label class="file-label" for="fileInput">📁 Choose expenses.txt</label>
+    <input id="fileInput" type="file" accept=".txt" onchange="showFileName()">
+    <button class="btn" onclick="analyzeFile()">Analyze Expenses →</button>
+    <button class="btn secondary" onclick="loadSample()">✨ Try Sample</button>
+  </div>
+  <div class="file-name" id="fileName">No file selected</div>
+  <div id="message" class="message"></div>
+</section>
+
+<section class="cards">
+  <div class="card">
+    <div class="card-top"><span class="icon">💰</span><span class="green">TOTAL</span></div>
+    <div class="label">Total Expense</div><div class="value" id="total">₹0.00</div>
+  </div>
+  <div class="card">
+    <div class="card-top"><span class="icon">📋</span><span class="purple">COUNT</span></div>
+    <div class="label">Valid Records</div><div class="value" id="records">0</div>
+  </div>
+  <div class="card">
+    <div class="card-top"><span class="icon">📊</span><span class="orange">AVG</span></div>
+    <div class="label">Average Expense</div><div class="value" id="average">₹0.00</div>
+  </div>
+  <div class="card">
+    <div class="card-top"><span class="icon">🏆</span><span class="blue">MAX</span></div>
+    <div class="label">Highest Expense</div><div class="value" id="highest">₹0.00</div>
+  </div>
+</section>
+
+<section class="grid">
+  <div class="panel">
+    <div class="panel-head">
+      <h3>Expense Records</h3><span class="tag" id="recordTag">0 records</span>
     </div>
+    <table>
+      <thead><tr><th>#</th><th>Category</th><th>Amount</th><th>Status</th></tr></thead>
+      <tbody id="expenseTable">
+        <tr><td colspan="4"><div class="empty"><div class="empty-icon">📄</div>Upload a file to view expense records</div></td></tr>
+      </tbody>
+    </table>
   </div>
 
+  <div class="panel">
+    <div class="panel-head"><h3>File Format</h3><span class="tag">expenses.txt</span></div>
+    <div class="format">
+      Each line should contain:
+      <br><br><code>Category,Amount</code>
+      <br><br>
+      Example:
+      <br>
+      Food,150<br>
+      Travel,80<br>
+      Shopping,500<br>
+      Electricity,1200<br>
+      Food,200
+    </div>
+    <ul>
+      <li>Amount must be ≥ 0.</li>
+      <li>Invalid records are skipped.</li>
+      <li>Program should continue after invalid data.</li>
+      <li>Missing files should be handled safely.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>Daily Expense Analyzer • Java File Handling Project • 2026</footer>
+
 <script>
-  const digitsEl = document.getElementById('digits');
-  const statusLine = document.getElementById('statusLine');
-  const generateBtn = document.getElementById('generateBtn');
-  const logList = document.getElementById('logList');
-  const logEmpty = document.getElementById('logEmpty');
-  const logCount = document.getElementById('logCount');
-  const ring = document.getElementById('ring');
-  const ringLabel = document.getElementById('ringLabel');
+function showFileName(){
+  const file=document.getElementById("fileInput").files[0];
+  document.getElementById("fileName").textContent=file ? "Selected: "+file.name : "No file selected";
+}
 
-  const CIRCUMFERENCE = 150.8;
-  const EXPIRY_SECONDS = 30;
-  let runCount = 0;
-  let timerInterval = null;
+function msg(text,type){
+  const m=document.getElementById("message");
+  m.textContent=text;m.className="message "+type;
+}
 
-  function randomOtp(){
-    // 6-digit OTP, always between 100000 and 999999
-    return Math.floor(100000 + Math.random() * 900000);
+function analyzeFile(){
+  const input=document.getElementById("fileInput");
+  if(!input.files.length){msg("Please choose your expenses.txt file first.","error");return;}
+  const file=input.files[0];
+  if(file.name.toLowerCase()!=="expenses.txt"){
+    msg("Please select a file named expenses.txt.","error");return;
   }
+  const reader=new FileReader();
+  reader.onload=e=>processText(e.target.result);
+  reader.onerror=()=>msg("Unable to read the file.","error");
+  reader.readAsText(file);
+}
 
-  function renderDigits(otpString, animate){
-    const boxes = digitsEl.querySelectorAll('.digit');
-    boxes.forEach((box, i) => {
-      box.classList.remove('placeholder');
-      if(!animate){
-        box.textContent = otpString[i];
-        return;
-      }
-      let ticks = 0;
-      const maxTicks = 6 + i * 2;
-      const roll = setInterval(() => {
-        box.textContent = Math.floor(Math.random() * 10);
-        ticks++;
-        if(ticks >= maxTicks){
-          clearInterval(roll);
-          box.textContent = otpString[i];
-        }
-      }, 35);
-    });
-  }
+function loadSample(){
+  const sample=`Food,150
+Travel,80
+Shopping,500
+Electricity,1200
+Food,200`;
+  processText(sample);
+  document.getElementById("fileName").textContent="✨ Sample data loaded";
+  msg("Sample data analyzed successfully.","success");
+}
 
-  function startExpiry(){
-    clearInterval(timerInterval);
-    let remaining = EXPIRY_SECONDS;
-    ringLabel.textContent = remaining;
-    ring.style.strokeDashoffset = 0;
-    statusLine.textContent = 'Code active — expires in ' + remaining + 's';
-
-    timerInterval = setInterval(() => {
-      remaining--;
-      const offset = CIRCUMFERENCE * (1 - remaining / EXPIRY_SECONDS);
-      ring.style.strokeDashoffset = offset;
-      ringLabel.textContent = remaining > 0 ? remaining : '0';
-
-      if(remaining <= 0){
-        clearInterval(timerInterval);
-        statusLine.textContent = 'Code expired — generate a new one';
-      } else {
-        statusLine.textContent = 'Code active — expires in ' + remaining + 's';
-      }
-    }, 1000);
-  }
-
-  function logRun(otp){
-    runCount++;
-    logEmpty.style.display = 'none';
-
-    const li = document.createElement('li');
-    li.classList.add('new');
-    li.innerHTML =
-      '<span class="run">Run ' + String(runCount).padStart(2, '0') + '</span>' +
-      '<span class="code">' + otp + '</span>' +
-      '<span class="ok">6 digits ✓</span>';
-
-    logList.prepend(li);
-
-    // keep the visible history compact
-    while(logList.children.length > 6){
-      logList.removeChild(logList.lastChild);
-    }
-    logCount.textContent = runCount + (runCount === 1 ? ' run' : ' runs');
-  }
-
-  generateBtn.addEventListener('click', () => {
-    const otp = randomOtp().toString();
-    renderDigits(otp, true);
-    startExpiry();
-    logRun(otp);
+function processText(text){
+  const valid=[],invalid=[];
+  text.split(/\r?\n/).forEach((line,i)=>{
+    line=line.trim();
+    if(!line)return;
+    const p=line.split(",");
+    const amount=p.length===2 ? Number(p[1].trim()) : NaN;
+    const category=p.length===2 ? p[0].trim() : "";
+    if(p.length!==2 || !category || !Number.isFinite(amount) || amount<0)
+      invalid.push(line);
+    else valid.push({category,amount});
   });
+
+  const table=document.getElementById("expenseTable");
+  table.innerHTML="";
+
+  let total=0,highest=valid[0];
+
+  valid.forEach((x,i)=>{
+    total+=x.amount;
+    if(x.amount>(highest?.amount ?? -1))highest=x;
+    table.innerHTML+=`<tr>
+      <td>${i+1}</td><td>${safe(x.category)}</td>
+      <td class="amount">₹${x.amount.toFixed(2)}</td>
+      <td><span class="badge">✓ Valid</span></td>
+    </tr>`;
+  });
+
+  invalid.forEach(x=>{
+    table.innerHTML+=`<tr>
+      <td>—</td><td>${safe(x)}</td><td>—</td>
+      <td><span class="badge invalid">Skipped</span></td>
+    </tr>`;
+  });
+
+  if(!valid.length){
+    table.innerHTML=`<tr><td colspan="4"><div class="empty">No valid expense records found.</div></td></tr>`;
+  }
+
+  document.getElementById("total").textContent="₹"+total.toFixed(2);
+  document.getElementById("records").textContent=valid.length;
+  document.getElementById("average").textContent="₹"+(valid.length?total/valid.length:0).toFixed(2);
+  document.getElementById("highest").textContent=highest?"₹"+highest.amount.toFixed(2):"₹0.00";
+  document.getElementById("recordTag").textContent=valid.length+" records";
+
+  if(valid.length) msg(
+    invalid.length ? `${valid.length} valid record(s) processed • ${invalid.length} invalid record(s) skipped.` :
+    `All ${valid.length} records processed successfully.`,"success"
+  );
+  else msg("No valid records found in the file.","error");
+}
+
+function safe(s){
+  return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;")
+    .replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
 </script>
 </body>
 </html>
